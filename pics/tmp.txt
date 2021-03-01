@@ -1,0 +1,1 @@
+Figures are stored here.
