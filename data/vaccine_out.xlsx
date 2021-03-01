@@ -1,0 +1,186 @@
+iso2,Country/Region,No. of people covered (thousands),No. of people covered as % of population,cname,iso2,diff abs,Diff %
+AF,Afghanistan,1863,0.05,Afghanistan,AF,3,0.0
+AL,Albania,144,0.05,Albania,AL,0,0.0
+DZ,Algeria,2175,0.05,Algeria,DZ,4,0.0
+AO,Angola,1509,0.05,Angola,AO,3,0.0
+AG,Antigua and Barbuda,22,0.228,Antigua and Barbuda,AG,0,0.0
+AR,Argentina,31455,0.7,Argentina,AR,3,0.0
+AM,Armenia,149,0.05,Armenia,AM,1,0.0
+AW,Aruba,20,0.178,Aruba,AW,0,0.0
+AU,Australia,53678,2.103,Australia,AU,-4998,-0.196
+AT,Austria,16256,1.835,Austria,AT,1,0.0
+AZ,Azerbaijan,500,0.05,Azerbaijan,AZ,1,0.0
+BS,Bahamas,87,0.228,Bahamas,BS,0,0.0
+BH,Bahrain,532,0.358,Bahrain,BH,0,0.0
+BD,Bangladesh,8342,0.05,Bangladesh,BD,13,0.0
+BB,Barbados,65,0.228,Barbados,BB,0,0.0
+BE,Belgium,21021,1.835,Belgium,BE,1,0.0
+BZ,Belize,93,0.228,Belize,BZ,0,0.0
+BJ,Benin,592,0.05,Benin,BJ,1,0.0
+BT,Bhutan,37,0.05,Bhutan,BT,0,0.0
+BO,Bolivia,5236,0.453,Bolivia,BO,1,0.0
+BA,Bosnia and Herzegovina,165,0.05,Bosnia and Herzegovina,BA,0,0.0
+BW,Botswana,119,0.05,Botswana,BW,0,0.0
+BR,Brazil,133524,0.635,Brazil,BR,16,0.0
+BN,Brunei,23,0.05,Brunei,BN,0,0.0
+BG,Bulgaria,12755,1.835,Bulgaria,BG,1,0.0
+BF,Burkina Faso,1018,0.05,Burkina Faso,BF,2,0.0
+BI,Burundi,577,0.05,Burundi,BI,1,0.0
+KH,Cambodia,826,0.05,Cambodia,KH,1,0.0
+CM,Cameroon,1277,0.05,Cameroon,CM,2,0.0
+CA,Canada,123879,3.301,Canada,CA,3,0.0
+CV,Cape Verde,28,0.05,Cape Verde,CV,0,0.0
+CF,Central African Republic,238,0.05,Central African Republic,CF,1,0.0
+TD,Chad,799,0.05,Chad,TD,2,0.0
+CL,Chile,16410,0.859,Chile,CL,1,0.0
+CN,China,220111,0.157,China,CN,107,0.0
+CO,Colombia,16495,0.327,Colombia,CO,4,0.0
+KM,Comoros,44,0.05,Comoros,KM,0,0.0
+CR,Costa Rica,3158,0.622,Costa Rica,CR,0,0.0
+HR,Croatia,7464,1.835,Croatia,HR,0,0.0
+CY,Cyprus,1607,1.835,Cyprus,CY,0,0.0
+CZ,Czech Republic,19542,1.835,Czech Republic,CZ,1,0.0
+DK,Denmark,10654,1.835,Denmark,DK,1,0.0
+DJ,Djibouti,54,0.05,Djibouti,DJ,0,0.0
+DM,Dominica,16,0.228,Dominica,DM,0,0.0
+DO,Dominican Republic,7364,0.711,Dominican Republic,DO,1,0.0
+CD,DR Congo,9803,0.1,DR Congo,CD,15,0.0
+EC,Ecuador,8441,0.489,Ecuador,EC,2,0.0
+EG,Egypt,60598,0.61,Egypt,EG,7,0.0
+SV,El Salvador,2473,0.383,El Salvador,SV,1,0.0
+ER,Eritrea,175,0.05,Eritrea,ER,0,0.0
+EE,Estonia,2431,1.835,Estonia,EE,0,0.0
+SZ,Eswatini,56,0.05,Eswatini,SZ,0,0.0
+ET,Ethiopia,4837,0.05,Ethiopia,ET,8,0.0
+FJ,Fiji,45,0.05,Fiji,FJ,0,0.0
+FI,Finland,10125,1.835,Finland,FI,0,0.0
+FR,France,118944,1.835,France,FR,5,0.0
+GM,Gambia,118,0.05,Gambia,GM,1,0.0
+GE,Georgia,186,0.05,Georgia,GE,0,0.0
+DE,Germany,152470,1.835,Germany,DE,7,0.0
+GH,Ghana,1511,0.05,Ghana,GH,3,0.0
+GR,Greece,19680,1.835,Greece,GR,1,0.0
+GD,Grenada,25,0.228,Grenada,GD,0,0.0
+GT,Guatemala,4019,0.228,Guatemala,GT,1,0.0
+GN,Guinea,682,0.05,Guinea,GN,1,0.0
+GW,Guinea-Bissau,89,0.05,Guinea-Bissau,GW,0,0.0
+GY,Guyana,179,0.228,Guyana,GY,0,0.0
+HT,Haiti,2570,0.228,Haiti,HT,1,0.0
+HN,Honduras,2230,0.228,Honduras,HN,1,0.0
+HK,Hong Kong,11627,1.546,Hong Kong,HK,1,0.0
+HU,Hungary,17933,1.835,Hungary,HU,1,0.0
+IS,Iceland,557,1.56,Iceland,IS,0,0.0
+IN,India,1168486,0.854,India,IN,105,0.0
+ID,Indonesia,133366,0.5,Indonesia,ID,20,0.0
+IR,Iran,4170,0.05,Iran,IR,6,0.0
+IQ,Iraq,1959,0.05,Iraq,IQ,3,0.0
+IE,Ireland,9083,1.835,Ireland,IE,0,0.0
+IL,Israel,12453,1.376,Israel,IL,0,0.0
+IT,Italy,110756,1.835,Italy,IT,4,0.0
+CI,Ivory Coast,1316,0.05,Ivory Coast,CI,2,0.0
+JM,Jamaica,622,0.228,Jamaica,JM,0,0.0
+JP,Japan,151319,1.199,Japan,JP,9,0.0
+JO,Jordan,3609,0.358,Jordan,JO,1,0.0
+KZ,Kazakhstan,2000,0.107,Kazakhstan,KZ,0,0.0
+KE,Kenya,2384,0.05,Kenya,KE,4,0.0
+KI,Kiribati,6,0.05,Kiribati,KI,0,0.0
+XK,Kosovo,90,0.05,Kosovo,XK,0,0.0
+KW,Kuwait,238,0.05,Kuwait,KW,0,0.0
+KG,Kyrgyzstan,320,0.05,Kyrgyzstan,KG,1,0.0
+LA,Laos,359,0.05,Laos,LA,1,0.0
+LV,Latvia,3523,1.835,Latvia,LV,0,0.0
+LB,Lebanon,343,0.05,Lebanon,LB,0,0.0
+LS,Lesotho,103,0.05,Lesotho,LS,1,0.0
+LR,Liberia,229,0.05,Liberia,LR,0,0.0
+LY,Libya,329,0.05,Libya,LY,0,0.0
+LT,Lithuania,5107,1.835,Lithuania,LT,1,0.0
+LU,Luxembourg,1127,1.835,Luxembourg,LU,0,0.0
+MO,Macau,634,0.932,Macau,MO,0,0.0
+MG,Madagascar,1347,0.05,Madagascar,MG,3,0.0
+MW,Malawi,1016,0.05,Malawi,MW,2,0.0
+MY,Malaysia,27532,0.845,Malaysia,MY,12503,0.384
+MV,Maldives,19,0.05,Maldives,MV,0,0.0
+ML,Mali,956,0.05,Mali,ML,1,0.0
+MT,Malta,906,1.835,Malta,MT,0,0.0
+MH,Marshall Islands,3,0.05,Marshall Islands,MH,0,0.0
+MR,Mauritania,203,0.05,Mauritania,MR,0,0.0
+MU,Mauritius,63,0.05,Mauritius,MU,0,0.0
+MX,Mexico,152013,1.192,Mexico,MX,10,0.00099999999999989
+FM,Micronesia,5,0.05,Micronesia,FM,0,0.0
+MD,Moldova,134,0.05,Moldova,MD,0,0.0
+MN,Mongolia,165,0.05,Mongolia,MN,0,0.0
+ME,Montenegro,31,0.05,Montenegro,ME,0,0.0
+MA,Morocco,67782,1.905,Morocco,MA,66003,1.855
+MZ,Mozambique,1560,0.05,Mozambique,MZ,2,0.0
+MM,Myanmar,2646,0.05,Myanmar,MM,4,0.0
+NA,Namibia,123,0.05,Namibia,NA,0,0.0
+NR,Nauru,1,0.05,Nauru,NR,0,0.0
+NP,Nepal,26425,0.929,Nepal,NP,2,0.0
+NL,Netherlands,31618,1.835,Netherlands,NL,2,0.0
+NZ,New Zealand,12157,2.468,New Zealand,NZ,1,0.0
+NI,Nicaragua,1490,0.228,Nicaragua,NI,1,0.0
+NE,Niger,1167,0.05,Niger,NE,1,0.0
+NG,Nigeria,10064,0.05,Nigeria,NG,16,0.0
+MK,North Macedonia,104,0.05,North Macedonia,MK,0,0.0
+NO,Norway,9830,1.835,Norway,NO,1,0.0
+OM,Oman,210,0.05,Oman,OM,0,0.0
+PK,Pakistan,54252,0.265,Pakistan,PK,15,0.0
+PW,Palau,1,0.05,Palau,PW,0,0.0
+PA,Panama,2463,0.584,Panama,PA,1,0.0
+PG,Papua New Guinea,431,0.05,Papua New Guinea,PG,1,0.0
+PY,Paraguay,1632,0.228,Paraguay,PY,0,0.0
+PE,Peru,12518,0.377,Peru,PE,3,0.0
+PH,Philippines,38873,0.362,Philippines,PH,8,0.0
+PL,Poland,69678,1.835,Poland,PL,3,0.0
+PT,Portugal,18856,1.835,Portugal,PT,1,0.0
+QA,Qatar,140,0.05,Qatar,QA,0,0.0
+RO,Romania,35607,1.835,Romania,RO,2,0.0
+RU,Russia,80000,0.545,Russia,RU,0,0.0
+RW,Rwanda,621,0.05,Rwanda,RW,1,0.0
+KN,Saint Kitts and Nevis,13,0.228,Saint Kitts and Nevis,KN,0,0.0
+WS,Samoa,10,0.05,Samoa,WS,0,0.0
+ST,Sao Tome and Principe,11,0.05,Sao Tome and Principe,ST,0,0.0
+SA,Saudi Arabia,1707,0.05,Saudi Arabia,SA,3,0.0
+SN,Senegal,817,0.05,Senegal,SN,2,0.0
+RS,Serbia,2349,0.337,Serbia,RS,1,0.0
+SL,Sierra Leone,391,0.05,Sierra Leone,SL,0,0.0
+SG,Singapore,286,0.05,Singapore,SG,1,0.0
+SK,Slovakia,10000,1.835,Slovakia,SK,0,0.0
+SI,Slovenia,3795,1.835,Slovenia,SI,1,0.0
+SB,Solomon Islands,32,0.05,Solomon Islands,SB,0,0.0
+ZA,South Africa,3693,0.063,South Africa,ZA,4,0.0
+KR,South Korea,46589,0.901,South Korea,KR,4,0.0
+SS,South Sudan,670,0.05,South Sudan,SS,1,0.0
+ES,Spain,85299,1.835,Spain,ES,4,0.0
+LK,Sri Lanka,1092,0.05,Sri Lanka,LK,2,0.0
+LC,St. Lucia,41,0.228,St. Lucia,LC,0,0.0
+VC,St. Vincent and the Grenadines,25,0.228,St. Vincent and the Grenadines,VC,0,0.0
+SD,Sudan,2164,0.05,Sudan,SD,3,0.0
+SR,Suriname,136,0.228,Suriname,SR,0,0.0
+SE,Sweden,18951,1.835,Sweden,SE,1,0.0
+CH,Switzerland,8328,0.975,Switzerland,CH,1,0.0
+TW,Taiwan,6182,0.262,Taiwan,TW,2,0.0
+TJ,Tajikistan,465,0.05,Tajikistan,TJ,0,0.0
+TZ,Tanzania,2820,0.05,Tanzania,TZ,4,0.0
+TH,Thailand,31500,0.452,Thailand,TH,0,0.0
+TL,Timor-Leste,65,0.05,Timor-Leste,TL,0,0.0
+TG,Togo,405,0.05,Togo,TG,1,0.0
+TO,Tonga,5,0.05,Tonga,TO,0,0.0
+TT,Trinidad and Tobago,318,0.228,Trinidad and Tobago,TT,0,0.0
+TN,Tunisia,590,0.05,Tunisia,TN,1,0.0
+TR,Turkey,25000,0.301,Turkey,TR,0,0.0
+TV,Tuvalu,1,0.05,Tuvalu,TV,0,0.0
+AE,U.A.E.,3314,0.308,U.A.E.,AE,-537,-0.05
+GB,U.K.,201845,3.022,United Kingdom,GB,5,0.0
+US,U.S.,555000,1.69,United States,US,0,0.0
+UG,Uganda,1994,0.05,Uganda,UG,3,0.0
+UA,Ukraine,2090,0.05,Ukraine,UA,3,0.0
+UY,Uruguay,803,0.228,Uruguay,UY,0,0.0
+UZ,Uzbekistan,36665,1.103,Uzbekistan,UZ,2,0.00099999999999989
+VU,Vanuatu,15,0.05,Vanuatu,VU,0,0.0
+VE,Venezuela,16348,0.588,Venezuela,VE,10002,0.36
+VN,Vietnam,19831,0.206,Vietnam,VN,8,0.0
+PS,West Bank and Gaza,249,0.05,West Bank and Gaza,PS,0,0.0
+YE,Yemen,1585,0.05,Yemen,YE,3,0.0
+ZM,Zambia,917,0.05,Zambia,ZM,1,0.0
+ZW,Zimbabwe,746,0.05,Zimbabwe,ZW,1,0.0
