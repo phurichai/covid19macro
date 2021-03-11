@@ -760,12 +760,12 @@ def save_results(cset=['US']): # Unpack pickle and save all results into an exce
             t_vac = pickle.load(open(f'../output/{out_load_folder}/{c}_vacworse.pkl','rb'))
             t_spike = pickle.load(open(f'../output/{out_load_folder}/{c}_shock.pkl','rb'))
             t_reinfect = pickle.load(open(f'../output/{out_load_folder}/{c}_reinfect.pkl','rb'))
-            t_better = pickle.load(open(f'../output/{out_load_folder}/{c}_better.pkl','rb'))
+            #t_better = pickle.load(open(f'../output/{out_load_folder}/{c}_better.pkl','rb'))
             tmp.df3.to_excel(writer, sheet_name=f'{c}_base')
             t_vac.df3.to_excel(writer, sheet_name=f'{c}_vacworse')
             t_spike.df3.to_excel(writer, sheet_name=f'{c}_shock')
             t_reinfect.df3.to_excel(writer, sheet_name=f'{c}_reinfect')
-            t_better.df3.to_excel(writer, sheet_name=f'{c}_better')
+            #t_better.df3.to_excel(writer, sheet_name=f'{c}_better')
 
 # ---------------------------------------------------
 # x. Plotting functions        
@@ -813,106 +813,6 @@ def scatter2(x,y,x2,y2,xlab,ylab,df):
     plt.yticks(fontsize= 20)
     return fig, ax
 
-# ---------- x. # Plot for GEM note
-def plot_gem(cset=['US']): 
-    # Graph 1: Baseline projections
-    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10,8), constrained_layout=True)        
-    transpa = 0
-    data1 = {}
-    df_yratio = pd.read_csv(f'../output/growth-mob.csv', index_col=0)
-    for c in cset:
-        tmp = pickle.load(open(f'../output/{out_load_folder}/{c}_baseline.pkl','rb'))
-        df = tmp.df3
-        yearend = df.index.get_loc('2020-12-31')+1
-        gdp_2020 = df_yratio.loc[c]['Growth']
-        mob_2021 = df['mob_fc'].iloc[yearend:].mean() # Average mobility for 2021
-        gdp_2021 = 100*mob_2021*df_yratio.loc[c]['ym_ratio']
-        data1[c] = [gdp_2020, gdp_2021]
-        if c == 'US':
-            ax[0,0].plot(df.index, 100*df['DT_N'].diff(), color='red', label='US')
-            ax[0,1].plot(df.index, 100*df['DD_N'], color='red', label='US')
-            ax[1,0].plot(df.index, 100*df['mob_fc'], color='red', label='US')
-        elif c =='DE':
-            ax[0,0].plot(df.index, 100*df['DT_N'].diff(), color='blue',label='DE')
-            ax[0,1].plot(df.index, 100*df['DD_N'], color='blue', label='DE')
-            ax[1,0].plot(df.index, 100*df['mob_fc'], color='blue', label='DE')
-        elif c =='GB':
-            ax[0,0].plot(df.index, 100*df['DT_N'].diff(), color='darkgreen', label='GB')
-            ax[0,1].plot(df.index, 100*df['DD_N'], color='darkgreen', label='GB')
-            ax[1,0].plot(df.index, 100*df['mob_fc'], color='darkgreen', label='GB')
-        elif c =='BR':
-            ax[0,0].plot(df.index, 100*df['DT_N'].diff(), color='orange', label='BR')
-            ax[0,1].plot(df.index, 100*df['DD_N'], color='orange', label='BR')
-            ax[1,0].plot(df.index, 100*df['mob_fc'], color='orange', label='BR')
-        elif c =='IN':
-            ax[0,0].plot(df.index, 100*df['DT_N'].diff(), color='lightskyblue', label='IN')
-            ax[0,1].plot(df.index, 100*df['DD_N'], color='lightskyblue', label='IN')
-            ax[1,0].plot(df.index, 100*df['mob_fc'], color='lightskyblue', label='IN')
-        else:
-            ax[0,0].plot(df.index, 100*df['DT_N'].diff(), color='lightgray', alpha=0.6)
-            ax[0,1].plot(df.index, 100*df['DD_N'], color='lightgray', alpha=0.6)
-            ax[1,0].plot(df.index, 100*df['mob_fc'], color='lightgray', alpha=0.6) 
-    ax[0,0].legend(loc=0,framealpha=transpa ,fontsize='x-large')
-    ax[0,1].legend(loc=0,framealpha=transpa ,fontsize='x-large')
-    ax[1,0].legend(loc=0,framealpha=transpa ,fontsize='x-large')
-    ax[0,0].axvline(df.index[tmp.T], linewidth = 1, color='black', linestyle='-')
-    ax[0,1].axvline(df.index[tmp.T], linewidth = 1, color='black', linestyle='-')
-    ax[1,0].axvline(df.index[tmp.T], linewidth = 1, color='black', linestyle='-')
-    plt.setp(ax[0,0].get_xticklabels(), rotation=30, horizontalalignment='right')
-    plt.setp(ax[0,1].get_xticklabels(), rotation=30, horizontalalignment='right')
-    plt.setp(ax[1,0].get_xticklabels(), rotation=30, horizontalalignment='right')
-    # Last panel, scatter plot
-    df1 =  pd.DataFrame.from_dict(data1, orient='index', columns=['GDP 2020','GDP 2021']) 
-    ax[1,1].scatter(df1['GDP 2020'],df1['GDP 2021'],marker='o',facecolors='none', edgecolors='none')
-    for i, label in enumerate(df1.index):
-        ax[1,1].annotate(label, (df1['GDP 2020'].iloc[i], df1['GDP 2021'].iloc[i]), size=16)
-    ax[1,1].axline([0, 0], [1, 1])
-    ax[1,1].set_xlabel(xlab,size=20)
-    ax[1,1].set_ylabel(ylab,size=20)
-    plt.xticks(fontsize= 20)
-    plt.yticks(fontsize= 20)
-    Path(f'../pics/GEM_Mar2021').mkdir(exist_ok=True)
-    fig.savefig(f'../pics/GEM_Mar2021/fig1_11Feb.png')      
-    # Graph 2: Downside risks
-    # fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10,8), constrained_layout=True)        
-    # transpa = 0
-    # for c in cset:
-    #     tmp = pickle.load(open(f'../output/{out_load_folder}/{c}_baseline.pkl','rb'))
-    #     df = tmp.df3
-    #     yearend = df.index.get_loc('2020-12-31')+1        
-
-
-# Plot 2 countries' baseline versus one scenario
-def plot_scenarios(cset = ['US','DE'],scenario='vacworse'):
-    fig, ax = plt.subplots(nrows=2, ncols=len(cset), figsize=(5*len(cset),8), constrained_layout=True)
-    transpa = 0.0
-    col = 0
-    for c in cset:
-        tmp = pickle.load(open(f'../output/Agustin presentation/{c}_baseline.pkl','rb'))
-        tmp_s = pickle.load(open(f'../output/Agustin presentation/{c}_{scenario}.pkl','rb'))
-        df = tmp.df3
-        df_s = tmp_s.df3
-        ax[0,col].plot(df.index, 100*df_s['S']/tmp.N, label='$S_t$',color='red')
-        ax[0,col].plot(df.index, 100*df_s['V']/tmp.N, label='$V_t$',color='red',linestyle='--')
-        ax[0,col].plot(df.index, 100*df['S']/tmp.N, label='baseline',color='gray')
-        ax[0,col].plot(df.index, 100*df['V']/tmp.N, color='gray',linestyle='--')
-        ax[0,col].axvline(df.index[tmp.T], linewidth = 2, color='gray', linestyle=':')
-        ax[0,col].set_title(f'{c}: susceptible & vaccinated',fontsize='x-large')
-        ax[0,col].legend(loc='best',framealpha=transpa ,fontsize='x-large')
-        ax[0,col].set(ylabel='% of population')
-    
-        ax[1,col].plot(df.index, 100*df_s['mob_fc'], label='Mobility', color='red')    
-        ax[1,col].plot(df.index, 100*df['mob_fc'], label='baseline', color='gray')
-        ax[1,col].axvline(df.index[tmp.T], linewidth = 2, color='gray', linestyle=':')
-        ax[1,col].legend(loc=0,framealpha=transpa ,fontsize='x-large')
-        ax[1,col].set_title(f'{c}: mobility',fontsize='x-large')
-        ax[1,col].set(ylabel='% deviations from norm')
-
-        plt.setp(ax[0,col].get_xticklabels(), rotation=30, horizontalalignment='right')
-        plt.setp(ax[1,col].get_xticklabels(), rotation=30, horizontalalignment='right')
-        col =+ 1
-    Path(f'../pics/Agustin').mkdir(exist_ok=True)
-    fig.savefig(f'../pics/Agustin/fig-{scenario}-{cset}.png')
 
 def all_output(cset=['US','DE']):
     data_col = ['Mob 2021','Mob fc',
@@ -931,22 +831,19 @@ def all_output(cset=['US','DE']):
                         'GDP 2021 reinfect', 'GDP fc reinfect',
                         'dDeath 2021 reinfect', 'dDeath fc reinfect',
                         'dD/mn 2021 reinfect', 'dD/mn fc reinfect',
-                        'Mob 2021 better', 'Mob fc better',
-                        'GDP 2021 better', 'GDP fc better',
-                        'dDeath 2021 better', 'dDeath fc better',
-                        'dD/mn 2021 better', 'dD/mn fc better',
+                        # 'Mob 2021 better', 'Mob fc better',
+                        # 'GDP 2021 better', 'GDP fc better',
+                        # 'dDeath 2021 better', 'dDeath fc better',
+                        # 'dD/mn 2021 better', 'dD/mn fc better',
                         ]
     data = {}
     df_yratio = pd.read_csv(f'../output/growth-mob.csv', index_col=0)
     for c in cset:
-        # tmp = pickle.load(open(f'../output/Agustin presentation/{c}_baseline.pkl','rb'))
-        # tmp2 = pickle.load(open(f'../output/Agustin presentation/{c}_vacworse.pkl','rb'))
-        # tmp3 = pickle.load(open(f'../output/Agustin presentation/{c}_reinfect.pkl','rb'))
         tmp = pickle.load(open(f'../output/{out_load_folder}/{c}_baseline.pkl','rb'))
         tmp1 = pickle.load(open(f'../output/{out_load_folder}/{c}_shock.pkl','rb'))
         tmp2 = pickle.load(open(f'../output/{out_load_folder}/{c}_vacworse.pkl','rb'))
         tmp3 = pickle.load(open(f'../output/{out_load_folder}/{c}_reinfect.pkl','rb'))
-        tmp4 = pickle.load(open(f'../output/{out_load_folder}/{c}_better.pkl','rb'))
+        # tmp4 = pickle.load(open(f'../output/{out_load_folder}/{c}_better.pkl','rb'))
         cnum = tmp.df3.index.get_loc('2020-12-31')+1
         d = tmp.df3['total_cases'].last_valid_index()
         dnum = tmp.df3.index.get_loc(d)+1
@@ -987,14 +884,14 @@ def all_output(cset=['US','DE']):
         dD_mn_2021_reinfect = 1000000*dD_2021_reinfect/tmp.N
         dD_mn_fc_reinfect = 1000000*dD_fc_reinfect/tmp.N  
 
-        mob_2021_better = tmp4.df3['mob_fc'].iloc[cnum:].mean() # Average mobility for 2021
-        mob_fc_better = tmp4.df3['mob_fc'].iloc[dnum:].mean() # Average mobility from current date till year end
-        GDP_2021_better = 100*mob_2021_better*df_yratio.loc[c]['ym_ratio']
-        GDP_fc_better = 100*mob_fc_better*df_yratio.loc[c]['ym_ratio']
-        dD_2021_better = tmp4.df3['DD'][-1] - tmp4.df3['DD'][cnum]    
-        dD_fc_better = tmp4.df3['DD'][-1] - tmp4.df3['DD'][dnum]
-        dD_mn_2021_better = 1000000*dD_2021_better/tmp.N
-        dD_mn_fc_better = 1000000*dD_fc_better/tmp.N  
+        # mob_2021_better = tmp4.df3['mob_fc'].iloc[cnum:].mean() # Average mobility for 2021
+        # mob_fc_better = tmp4.df3['mob_fc'].iloc[dnum:].mean() # Average mobility from current date till year end
+        # GDP_2021_better = 100*mob_2021_better*df_yratio.loc[c]['ym_ratio']
+        # GDP_fc_better = 100*mob_fc_better*df_yratio.loc[c]['ym_ratio']
+        # dD_2021_better = tmp4.df3['DD'][-1] - tmp4.df3['DD'][cnum]    
+        # dD_fc_better = tmp4.df3['DD'][-1] - tmp4.df3['DD'][dnum]
+        # dD_mn_2021_better = 1000000*dD_2021_better/tmp.N
+        # dD_mn_fc_better = 1000000*dD_fc_better/tmp.N  
         
         data[c] = [mob_2021,mob_fc,
                    GDP_2021,GDP_fc,
@@ -1012,24 +909,12 @@ def all_output(cset=['US','DE']):
                    GDP_2021_reinfect, GDP_fc_reinfect,
                    dD_2021_reinfect, dD_fc_reinfect,
                    dD_mn_2021_reinfect, dD_mn_fc_reinfect,
-                   mob_2021_better, mob_fc_better,
-                   GDP_2021_better, GDP_fc_better,
-                   dD_2021_better, dD_fc_better,
-                   dD_mn_2021_better, dD_mn_fc_better,
+                   # mob_2021_better, mob_fc_better,
+                   # GDP_2021_better, GDP_fc_better,
+                   # dD_2021_better, dD_fc_better,
+                   # dD_mn_2021_better, dD_mn_fc_better,
                    ]
     df_out =  pd.DataFrame.from_dict(data, orient='index', columns=data_col) 
-    # fig, ax = scatter1('GDP 2021','dD/mn 2021','GDP loss (2021)','Deaths per million (2021)',df_out)
-    # ax.set_title('Baseline', size=20, fontweight="bold")
-    # fig.savefig('../pics/GEM_Mar2021/fig_GDP_deaths_baseline.png', dpi=300)
-    # fig3, ax = scatter2('GDP 2021','dD/mn 2021','GDP 2021 vacworse', 'dD/mn 2021 vacworse', 'GDP loss (2021)', 'Deaths per million (2021)', df_out)
-    # ax.set_title('Limited vaccines', size=20,fontweight="bold")
-    # fig3.savefig('../pics/GEM_Mar2021/fig_GDP_deaths_vacworse.png', dpi=300)
-    # fig4, ax = scatter2('GDP 2021','dD/mn 2021','GDP 2021 reinfect', 'dD/mn 2021 reinfect', 'GDP loss (2021)', 'Deaths per million (2021)', df_out)
-    # ax.set_title('Virus reinfection', size=20,fontweight="bold")
-    # fig4.savefig('../pics/GEM_Mar2021/fig_GDP_deaths_reinfect.png', dpi=300)
-    # fig5, ax = scatter2('GDP 2021','dD/mn 2021','GDP 2021 better', 'dD/mn 2021 better', 'GDP loss (2021)', 'Deaths per million (2021)', df_out)
-    # ax.set_title('Better', size=20,fontweight="bold")
-    # fig5.savefig('../pics/GEM_Mar2021/fig_GDP_deaths_better.png', dpi=300)
     
     name = f'../output/{out_save_folder}/all_output.pkl'
     pickle.dump(df_out,open(name,'wb'))
@@ -1137,23 +1022,7 @@ def policy_check():
         dict[c]=model.summary()
     return dict
         
-# Print estimated parameters
-def printparams(param_folder:str, cset:list):
-    # alpha, r_dth, p_dth0, b_dth, c_dth, k1, k2, 
-    # beta0, beta1, a, b, c, a2, b2, c2
-    dict = {'Parameters': ['alpha','r_dth','p_dth0','b_dth','c_dth','k1','k2',
-                            'beta0','beta','a','b','c',
-                            'a2','b2','c2']} 
-    for c in cset:
-        # p1 = pickle.load(open(f'../params/{param_folder}/estimates-{c}-round1.pkl','rb'))
-        # p2 = pickle.load(open(f'../params/{param_folder}/estimates-{c}-round2.pkl','rb'))
-        # dict[c] = tuple(p1)+tuple(p2)
-        p = pickle.load(open(f'../params/{param_folder}/estimates-{c}-joint.pkl','rb'))
-        dict[c] = tuple(p)
-    df = pd.DataFrame(dict) 
-    pd.options.display.float_format = '{:,.2f}'.format
-    display(df)
-    df.to_csv(f'../params/{param_folder}/summary.csv',float_format='%.2f',index=False)
+
 
 
 

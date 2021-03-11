@@ -6,13 +6,18 @@ Created on Mon Jan  4 10:39:18 2021
 """
 
 from datetime import datetime
+from datetime import date
 import numpy as np
 import pandas as pd
 from pathlib import Path
+
 # ------------------------------
 # Choose data and estimates cohort
 # ------------------------------
-chosen_date = '2021-02-22'
+
+chosen_date = str(date.today()) 
+#chosen_date = '2021-03-11' # Choose a fixed date to simulate using already downloaded data (eg older cohorts)
+vac_date = '9 Mar'
 
 df1 = pd.read_pickle(f'../data/data_daily_{chosen_date}.pkl')
 param_save_folder = f'param_{chosen_date}'
@@ -28,7 +33,7 @@ Path(f'../output/{out_load_folder}').mkdir(exist_ok=True)
 
 f_table = pd.read_pickle('../data/age_fatality.pkl')
 
-df_vac = pd.read_pickle('../data/vaccine_out.pkl')
+df_vac = pd.read_pickle(f'../data/vaccine_out_{vac_date}.pkl')
 
 # ----- Sub-samples for multi-round estimation
 T1_date = datetime(2020,12,31) # End of round-1 sample (before 2nd wave)

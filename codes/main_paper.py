@@ -21,15 +21,14 @@ tic = time.perf_counter()
 # ----------------------------------------                                                                             
 #   Full data update 
 # ----------------------------------------
-# !!!! Update 'chosen_date' in param_simple to current date before running
+# !!!! Specify 'chosen_date' in param_simple before running !!!!
 import data_covid                                                                                   
+from param_simple import *
+from seir_simple import *
 
 # ---------------------------------------------
 #       Functions to generate figures
 # ---------------------------------------------
-from param_simple import *
-from seir_simple import *
-
 sns.set_theme()
 
 def fig1(cset=['US','DE','GB','KR']):
@@ -64,6 +63,8 @@ def fig2_baseline(cset=['US','DE','GB','FR']):
         tmp.gamma_t_compute()
         tmp.fitmodel()
         tmp.sim_seir()
+        name = f'../output/{out_save_folder}/{c}_baseline.pkl'
+        pickle.dump(tmp,open(name,'wb'))
         fig = tmp.plot_portrait(saveplot=False)
         Path(f'../pics/paper_{date.today()}').mkdir(exist_ok=True)
         fig.savefig(f'../pics/paper_{date.today()}/fig2-baseline-{c}.pdf')  
@@ -113,6 +114,8 @@ def fig3_spike(cset = ['US','DE','GB']):
         t_spike.gamma_tilde_model = 'shock'
         t_spike.sim_seir()                
         dfb = t_spike.df3
+        name = f'../output/{out_save_folder}/{c}_shock.pkl'
+        pickle.dump(t_spike,open(name,'wb'))
         
         transpa = 0.0
         color2 = 'dodgerblue'
@@ -160,6 +163,8 @@ def fig4_vac(cset = ['US','DE','GB']):
         t_vac.fitmodel()
         t_vac.sim_seir()
         dfb = t_vac.df3
+        name = f'../output/{out_save_folder}/{c}_vacworse.pkl'
+        pickle.dump(t_vac,open(name,'wb'))
         
         transpa = 0.0
         color2 = 'dodgerblue'
@@ -209,6 +214,8 @@ def fig5_reinfect(cset = ['US','DE','GB']):
         t_reinfect.fitmodel()
         t_reinfect.sim_seir()
         dfb = t_reinfect.df3
+        name = f'../output/{out_save_folder}/{c}_reinfect.pkl'
+        pickle.dump(t_reinfect,open(name,'wb'))
         
         transpa = 0.0
         color2 = 'dodgerblue'
@@ -263,7 +270,7 @@ def fig6_allGDP():
     
     plt.setp(ax.get_xticklabels(), fontsize='large')
     plt.setp(ax.get_yticklabels(), fontsize='large')
-    plt.ylabel('Percentage points', fontsize=16)
+    plt.ylabel('Percent', fontsize=16)
     
     ax.set_xticklabels(["\n"*(i%2) + l for i,l in enumerate(df.index)])
     
@@ -291,7 +298,7 @@ def fig6b_allGDP():
     
     plt.setp(ax.get_xticklabels(), fontsize='large')
     plt.setp(ax.get_yticklabels(), fontsize='large')
-    plt.ylabel('Percentage points', fontsize=16)
+    plt.ylabel('Percent', fontsize=16)
     
     ax.set_xticklabels(["\n"*(i%2) + l for i,l in enumerate(df.index)])
     
@@ -320,6 +327,32 @@ def fig7_mob2GDP():
     Path(f'../pics/paper_{date.today()}').mkdir(exist_ok=True)
     fig.savefig(f'../pics/paper_{date.today()}/fig7-mob2GDP.pdf')  
 
+def scatter2(x,y,xlab,ylab,df):
+    x1 = df[x]
+    y1 = df[y]
+    fig, ax = plt.subplots(figsize=(10,8))
+    ax.scatter(x1,y1,marker='o',facecolors='none', edgecolors='none')
+    for i, label in enumerate(df.index):
+        if label in ['AR','BR','ID','IN','KR','MY','MX','PL','RU','SA','SG','TH','TR','ZA']:
+            color1 = 'red'
+        else:
+            color1 = 'black'
+        ax.annotate(label, (x1.iloc[i], y1.iloc[i]), size=16, color=color1)
+    ax.annotate('$45\degree$ line', (-1,0.5), size=16)
+    ax.axline([0, 0], [1, 1], color='black', linestyle='--')
+    ax.set_xlabel(xlab,size=20)
+    ax.set_ylabel(ylab,size=20)
+    plt.xticks(fontsize= 20)
+    plt.yticks(fontsize= 20)
+    return fig, ax
+
+def fig8_scatterscenarios(cset=['US','DE']):
+    df_out = all_output(cset)
+    fig, ax = scatter2('GDP 2021 reinfect','GDP 2021 3rdwave','Output losses, reinfection','Output losses, third wave',df_out)
+    Path(f'../pics/paper_{date.today()}').mkdir(exist_ok=True)
+    fig.savefig(f'../pics/paper_{date.today()}/fig8-scenarios.pdf')  
+    
+
 # ===========================
 #       Calling codes 
 # ===========================
@@ -328,6 +361,8 @@ cset = ['AR','AU','BE','BR','CA','FR','DE',
           'IN','ID','IT','JP','KR','MY','MX',
           'NL','PL','RU','SA','SG','ZA','ES','SE',
           'CH','TH','TR','GB','US']
+
+# Generate all figures in the paper
 fig1()
 fig2_baseline(cset)
 fig2_baseline_multi(['US','DE','GB','FR'],'ADV')
@@ -338,8 +373,11 @@ fig5_reinfect(cset)
 fig6_allGDP()     
 fig6b_allGDP()
 fig7_mob2GDP()
+fig8_scatterscenarios(cset)
 
-
+# Save estimated parameters and simulation results in spreadsheets 
+run_baseline(cset)
+save_results(cset)
 
 
 
