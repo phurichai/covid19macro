@@ -20,18 +20,18 @@ from country import country
 import pandas as pd
 import pickle
 
-data_sheet = '29 jan'
+data_sheet = '9 Mar'
 
 df = pd.read_excel("../data/vaccine_contracts.xlsx",sheet_name=data_sheet,
                     engine='openpyxl',)
 
-out = coco.convert(names=df['Country/Region'].values,to='iso2')
+#out = coco.convert(names=df['Country/Region'].values,to='iso2')
 
 for i in range(len(df)):
     df['iso2'].iloc[i] = coco.convert(names=df['cname'].iloc[i], to='iso2')
 
 df.index = df['iso2']    
-df.to_csv('../data/vaccine_out.xlsx')
+df.to_excel(f'../data/vaccine_out_{data_sheet}.xlsx')
 
-name = '../data/vaccine_out.pkl'
+name = f'../data/vaccine_out_{data_sheet}.pkl'
 pickle.dump(df,open(name,'wb'))
