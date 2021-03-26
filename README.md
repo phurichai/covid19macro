@@ -1,8 +1,10 @@
 # covid19macro
+
 A flexible quantitative framework for joint epidemiological-economic projections of the Covid-19 pandemic. 
 
 The repository produces forecasts of key epidemiological states, such as cases, deaths, new infections etc., as well as mobility which is used here as a proxy for economic activity (convertible to GDP). Virtually all the data used are publicly available and automatically downloaded within the code. The model is flexible and can accommodate various scenarios as well as any other countries with mobility and health data (cases, deaths and vaccinations).  
 
+#### For latest update, [see below](#latest-update)
 
 ### Background 
 The repository accompanies the paper "Macroeconomic consequences of pandexit". The following is the abstract (as of 12 Mar 2021):
@@ -18,7 +20,8 @@ For more advanced usage, please consult the paper and note the following:
 1. Projections require assumptions about future vaccination pace. Current formulation uses total contracted dosages as an input, which are manually taken from Bloomberg (file 'vaccine_contracts.xlsx') and loaded into the model via file `data_vaccines`. 
 2. The key model file `seir_simple` contains the solveCovid class that implements all the steps for a given country. The \__init\__ function specifies all common assumptions, includling policy function (fit to data or exogenous), infection shock process, vaccination assumptions and all other scenario assumptions.  
 
-### Latest update 26 Mar 2021
+### Latest update 
+#### 26 Mar 2021
 
 #### Forecasts for selected advanced economies
 
