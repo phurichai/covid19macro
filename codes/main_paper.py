@@ -352,7 +352,49 @@ def fig8_scatterscenarios(cset=['US','DE']):
     Path(f'../pics/paper_{date.today()}').mkdir(exist_ok=True)
     fig.savefig(f'../pics/paper_{date.today()}/fig8-scenarios.pdf')  
     
-
+def fig_update_multi(cset=['US','DE','GB','FR'],fname='multi'):
+    transpa = 0.0
+    color2 = 'dodgerblue'
+    cvec = ['firebrick', 'darkorange', 'cornflowerblue', 'seagreen']
+    cn = 0
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10,8), constrained_layout=True)
+    for c in cset:
+        tmp = solveCovid(c)
+        tmp.prelim()
+        tmp.gamma_t_compute()
+        tmp.fitmodel()
+        tmp.sim_seir()
+        df = tmp.df3
+        ax[0,0].plot(df.index, 100*df['I']/tmp.N, label=c, color=cvec[cn])
+        ax[0,1].plot(df.index, 100*df['mob_fc'], label=c, color=cvec[cn])
+        ax[1,0].plot(df.index, 100*df['V']/tmp.N, label=c, color=cvec[cn])
+        ax[1,1].plot(df.index, 100*df['S']/tmp.N, label=c, color=cvec[cn])
+        cn +=1 
+    ax[0,0].legend(loc='best',framealpha=transpa ,fontsize='x-large')
+    ax[0,0].set_title('Infectious population',fontsize='x-large')
+    ax[0,0].set(ylabel = '% of population')    
+    ax[0,0].axvline(df.index[tmp.T], linewidth = 2, color='gray', linestyle=':')
+    ax[0,1].legend(loc='best',framealpha=transpa ,fontsize='x-large')
+    ax[0,1].set_title('Mobility',fontsize='x-large')
+    ax[0,1].set(ylabel = '% deviations from norm') 
+    ax[0,1].axvline(df.index[tmp.T], linewidth = 2, color='gray', linestyle=':')
+    ax[1,0].legend(loc='best',framealpha=transpa ,fontsize='x-large')
+    ax[1,0].set_title('Vaccinated population',fontsize='x-large')
+    ax[1,0].set(ylabel = '% of population') 
+    ax[1,0].axvline(df.index[tmp.T], linewidth = 2, color='gray', linestyle=':')
+    ax[1,1].legend(loc='best',framealpha=transpa ,fontsize='x-large')
+    ax[1,1].set_title('Susceptible population',fontsize='x-large')
+    ax[1,1].set(ylabel = '% of population') 
+    ax[1,1].axvline(df.index[tmp.T], linewidth = 2, color='gray', linestyle=':')
+    plt.setp(ax[0,0].get_xticklabels(), rotation=30, horizontalalignment='right')
+    plt.setp(ax[0,1].get_xticklabels(), rotation=30, horizontalalignment='right')
+    plt.setp(ax[1,0].get_xticklabels(), rotation=30, horizontalalignment='right')
+    plt.setp(ax[1,1].get_xticklabels(), rotation=30, horizontalalignment='right')
+    fn_text = f'Estimate as of {date.today()}'
+    plt.figtext(0.2, -0.05, fn_text, horizontalalignment='center') 
+    Path(f'../pics/paper_{date.today()}').mkdir(exist_ok=True)
+    fig.savefig(f'../pics/paper_{date.today()}/fig-update-{fname}-{date.today()}.png') 
+    
 # ===========================
 #       Calling codes 
 # ===========================
@@ -374,6 +416,14 @@ fig6_allGDP()
 fig6b_allGDP()
 fig7_mob2GDP()
 fig8_scatterscenarios(cset)
+
+fig_update_multi(['US','DE','GB','FR'],'ADV')
+fig_update_multi(['BR','IN','KR','ZA'],'EME')
+
+cset2 = ['US','DE','GB','FR','ES','IT','CH','JP',
+         'BR','MX','IN','KR','ZA']
+df_update = update_table(cset2)
+print(df_update.to_markdown(tablefmt="grid"))
 
 # Save estimated parameters and simulation results in spreadsheets 
 run_baseline(cset)

@@ -920,6 +920,31 @@ def all_output(cset=['US','DE']):
     pickle.dump(df_out,open(name,'wb'))
     return df_out
 
+def update_table(cset=['US','DE']):
+    data_col = ['Mobility 2021','Mobility, rest of 2021',
+                        'Deaths/mn 2021','Deaths/mn, rest of 2021',
+                        ]
+    data = {}
+    for c in cset:
+        tmp = pickle.load(open(f'../output/{out_load_folder}/{c}_baseline.pkl','rb'))
+        cnum = tmp.df3.index.get_loc('2020-12-31')+1
+        d = tmp.df3['total_cases'].last_valid_index()
+        dnum = tmp.df3.index.get_loc(d)+1
+        
+        mob_2021 = tmp.df3['mob_fc'].iloc[cnum:].mean() # Average mobility for 2021
+        mob_fc = tmp.df3['mob_fc'].iloc[dnum:].mean() # Average mobility from current date till year end
+        dD_2021 = tmp.df3['DD'][-1] - tmp.df3['DD'][cnum]    
+        dD_fc = tmp.df3['DD'][-1] - tmp.df3['DD'][dnum]
+        dD_mn_2021 = 1000000*dD_2021/tmp.N
+        dD_mn_fc = 1000000*dD_fc/tmp.N
+        
+        data[c] = [mob_2021,mob_fc,
+                   dD_mn_2021,dD_mn_fc,
+                   ]
+    df_out =  pd.DataFrame.from_dict(data, orient='index', columns=data_col) 
+
+    return df_out
+
 # Compare 2 scenarios, showing 4 key charts
 def plot_2cases(c,df,df2,tmp,title,filename,saveplot=False):
     # Compute differences between 2 cases (lives saved at end points, and average mobility differences)
