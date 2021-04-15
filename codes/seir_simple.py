@@ -48,7 +48,6 @@ class solveCovid:
         self.phi_option = 'fit' # ['fit','exo']: Fit phi to latest data or specify as exogenous
         self.phi_exo = 2.5e-9 # weight on mobility in social welfare function
         self.phi_min = 1e-13 # Lowerbound for phi - authorities care about output
-        self.pdth_min = 0.005 # Lowerbound on death probability - countries with very few cases still think there is death probability
         # Infection rate model for forecast 
         self.gamma_tilde_model = 'AR1' # ['AR1','AR2','shock']
         self.gamma_shock_length = 10 # Shock gamma_tilde for x days  
@@ -57,31 +56,37 @@ class solveCovid:
         self.default_init_single = default_init_single
         self.default_bounds_single = default_bounds_single
         # Vaccine assumptions
-        self.vac_assump = 'vac_base' # ['vac_base','vac_worse']
+        self.vac_assump = 'vac_base' # ['vac_base','vac_worse','vac_better']
         self.effi_one = 0.5 # efficacy after one dose
         self.effi_two = 0.95 # efficacy after two doses
         self.target_weight = 0.8 # How targeted vaccine distribution is (1 = sequenced from eldest to youngest, 0 is random)
-        self.vac_base_use_A = 1 # Baseline: Group A (already started): % of contracted dosages deployed by December 2021
-        self.vac_base_start_B = '2021-03-31' # Baseline: Group B (hasn't started): first date of vaccination 
-        self.vac_base_use_B = 0.75 # Baseline: Group B: % of contracted dosages deployed by December 2021
-        self.vac_worse_use_A = 0.3 # Worse A: Use by end of 2021
-        self.vac_worse_start_B = '2021-06-30' # Worse B: Starting date
-        self.vac_worse_use_B = 0.3 # Worse B: Use by end of 2021
-        self.vac_better_use_A = 1.3
-        self.vac_better_start_B = '2021-03-31'
-        self.vac_better_use_B = 1
+        self.vac_base_cover = 1 # Baseline: (already started): % of effective coverage by December 2021 (to be controlled by country-specific scaling factor below)
+        self.vac_base_delayedstart = '2021-06-30' # Baseline: (hasn't started): first date of vaccination 
+        self.vac_base_delayedcover = 0.75 # Baseline: (hasn't started): % of contracted dosages deployed by December 2021
+        self.vac_worse_cover = 0.3 # Worse (started): Use by end of 2021
+        self.vac_worse_delayedstart = '2021-09-30' # Worse (hasn't started): Starting date
+        self.vac_worse_delayedcover = 0.3 # Worse (hasn't started): Use by end of 2021
+        self.vac_better_cover = 1.3
+        self.vac_better_delayedstart = '2021-06-30'
+        self.vac_better_delayedcover = 1
         # Reinfection and loss of immunity
         self.reinfect = 'immune' # ['immune','reinfect']
         self.r_re1 = np.log(2)/10000 # Baseline: lost immunity after 3 years
         self.r_re2 = np.log(2)/60 # Lost immunity after 60 days, approx 1% of V+R lose immunity each day
-
+        # Death probabilities
+        self.pdth_assump = 'martingale' # ['martingale','treatment']
+        self.pdth_min = 0.005 # Lowerbound on death probability - countries with very few cases still think there is death probability
+        self.pdth_halflife = 60 # Halflife for treatment case; no. of days it takes to close half the gap of current and assumed minimum death prob
+        self.pdth_theta = np.exp(-np.log(2)/self.pdth_halflife) 
     # --------------- 1. Preliminary: Get the data ------------------------
     def prelim(self):
         iso2 = self.iso2
         self.N = df1.fillna(method='ffill')['population'][iso2].iloc[-1]
         df2 = df1.iloc[:,df1.columns.get_level_values(1)==iso2][[
                 'total_cases','total_deaths','new_cases','new_deaths',
-                'google_smooth','vac_total','vac_partial',
+                'google_smooth','icu_patients','hosp_patients',
+                'new_tests','tests_per_case','aged_70_older',
+                'vac_total','vac_partial',
                 'vac_fully']][df1['total_cases'][iso2] > virus_thres] 
         df2['vac_total'] = df2['vac_total'].interpolate()
         df2['vac_partial'] = df2['vac_partial'].interpolate()
@@ -116,30 +121,41 @@ class solveCovid:
         # Compute vaccination parameters
         self.vac_partial = df2['vac_partial'].values
         self.vac_fully = df2['vac_fully'].values     
-        self.vac_contracted = 1000*df_vac.loc[iso2]['No. of people covered (thousands)']/self.N
+        #self.vac_contracted = 1000*df_vac.loc[iso2]['No. of people covered (thousands)']/self.N
         df2['V_'] = self.N * (self.effi_one*df2['vac_partial']
                     + self.effi_two*df2['vac_fully'])/100 # V = expected number of effectively vaccinated persons
         ix = pd.date_range(start=df2.index[0], end=default_maxT, freq='D') # Expand time-sample, to include forecast later
         df_v = df2.reindex(ix)
-        # Vaccination assumptions  
+        # Vaccination assumptions
+        if self.iso2 in ['GB','US']:
+            vac_scale = 1
+        elif self.iso2 in ['BE','FR','DE','IT','NL','PL','SG','ES','SE','CH','RO']:
+            vac_scale = 0.8
+        elif self.iso2 in ['AR','AU','CA','JP','KR','MX','RU','SA','ZA','TR']:
+            vac_scale = 0.65
+        elif self.iso2 in ['BR','TH','ID','IN','MY']:
+            vac_scale = 0.50
+        else:
+            vac_scale = 0.50
+            print('Missing vaccine assumption for selected country')
         if self.vac_assump == 'vac_base':              
-            if df2['V_'][-1] > 0: # If already vaccinating, assume self.vac_base_use_A % of orders are delivered and used by 2021 (if supply>100%, translates into faster distribution)            
-                df_v['V_'].loc['2021-12-31'] = self.vac_base_use_A * self.N * self.vac_contracted 
-            elif df2['V_'][-1] == 0: # If has not started, assume starting by xxx and fill orders by xxx
-                df_v['V_'].loc[self.vac_base_start_B] = 100 # 100 = assumed number of effectively vaccinated on first day
-                df_v['V_'].loc['2021-12-31'] = self.vac_base_use_B*( self.N * self.vac_contracted) # partial orders filled by year end
+            if df2['V_'][-1] > 0: # already started           
+                df_v['V_'].loc['2021-12-31'] = self.vac_base_cover * vac_scale * self.N  
+            elif df2['V_'][-1] == 0: # If has not started, assume starting by xxx and cover xxx at year end
+                df_v['V_'].loc[self.vac_base_delayedstart] = 100 # 100 = assumed number of effectively vaccinated on first day
+                df_v['V_'].loc['2021-12-31'] = self.vac_base_delayedcover* vac_scale*self.N # partial orders filled by year end
         elif self.vac_assump == 'vac_worse':
             if df2['V_'][-1] > 0:
-                df_v['V_'].loc['2021-12-31'] = self.vac_worse_use_A * self.N * self.vac_contracted # Only half of contracted doses are used
+                df_v['V_'].loc['2021-12-31'] = self.vac_worse_cover * vac_scale * self.N  
             elif df2['V_'][-1] == 0:
-                df_v['V_'].loc[self.vac_worse_start_B] = 100 # Start delayed 
-                df_v['V_'].loc['2021-12-31'] = self.vac_worse_use_B*(self.N * self.vac_contracted) # Half of (smaller orders) are used
+                df_v['V_'].loc[self.vac_worse_delayedstart] = 100 
+                df_v['V_'].loc['2021-12-31'] = self.vac_worse_delayedcover* vac_scale*self.N 
         elif self.vac_assump == 'vac_better':
             if df2['V_'][-1]>0:
-                df_v['V_'].loc['2021-12-31'] = self.vac_better_use_A*self.N*self.vac_contracted
-            elif df2['V_'][-1] == 0: # If has not started, assume starting by xxx and fill orders by xxx
-                df_v['V_'].loc[self.vac_better_start_B] = 100 # 100 = assumed number of effectively vaccinated on first day
-                df_v['V_'].loc['2021-12-31'] = self.vac_better_use_B*( self.N * self.vac_contracted) # partial orders filled by year end        
+                df_v['V_'].loc['2021-12-31'] = self.vac_better_cover * vac_scale * self.N
+            elif df2['V_'][-1] == 0: 
+                df_v['V_'].loc[self.vac_better_delayedstart] = 100 
+                df_v['V_'].loc['2021-12-31'] = self.vac_better_delayedcover* vac_scale*self.N       
         df_v['V_'] = df_v['V_'].interpolate()
         df_v['V_'] = df_v['V_'].clip(0,self.N)
         self.df2 = df2
@@ -278,6 +294,8 @@ class solveCovid:
         I_vec = [I_0]
         DT_vec = [DT_0]
         DD_vec = [DD_0]
+        DHR_vec = [DHR_0]
+        DHD_vec = [DHD_0]
         newcases_sm2 = np.append(newcases_sm, newcases_sm[-2:]) # Extend the list for forward projection below
         newdeaths_sm2 = np.append(newdeaths_sm, newdeaths_sm[-1])
         x_0 = x_init.copy()
@@ -297,10 +315,16 @@ class solveCovid:
             E_vec.append(E_0)
             DT_vec.append(DT_0)
             DD_vec.append(DD_0)
+            DHR_vec.append(DHR_0)
+            DHD_vec.append(DHD_0)
         self.df2['gamma_t'] = gamma_t_vec
         self.df2['pdth_t'] = p_dth_vec
         self.S_vec = S_vec # In-sample estmates, useful for phi calculation later on
         self.I_vec = I_vec
+        self.DHR_vec = DHR_vec # For fitting death probability 
+        self.DHD_vec = DHD_vec
+        HD_HR = np.array(self.DHR_vec) + np.array(self.DHD_vec)
+        self.df2['HD_HR'] = 100*HD_HR[:-1]/self.N 
         # gamma_t_sm = uniform_filter1d(gamma_t_vec, size=6, mode='nearest')
         # self.df2['gamma_sm'] = gamma_t_sm
         return gamma_t_vec, p_dth_vec
@@ -351,6 +375,7 @@ class solveCovid:
         self.best_rho1 = best_rho1
         self.best_rho2 = best_rho2
         self.best_params = best_params
+       
         #   C. Empirically fit phi for optimal policy to last observation 
         if self.phi_option == 'fit':
             m = self.df2['google_smooth'][-15:].mean() # Take average of last 15 days to smooth volatility
@@ -426,10 +451,24 @@ class solveCovid:
             if t<len(self.df2): # In sample
                 pdth_t = pdth_t_fc[t]
                 pdth_base = pdth_t/(eta*factor + 1-eta)
-                pdth_targ = factor*pdth_base        
+                pdth_targ = factor*pdth_base  
+            # if t==len(self.df2): # Parse pdth_base of hospitalised/N
+            #     y = pdth_t_base
+            #     X = self.df2['HD_HR'].shift(30) # Use lagged hospitalised as the predictor
+            #     X = sm.add_constant(X)
+            #     reg_pdth = sm.OLS(y,X, missing='drop').fit()
+            #     thetas = reg_pdth.params
+            #     self.best_theta = thetas
+            #     pdb.set_trace()
+            #     pdth_t_basex = y - thetas[0] - thetas[1]*X # Base death prob, parsed of hospitalisation wave
+            #     self.df2['pdth_base'] = pdth_t_base
+            #     self.df2['pdth_base_x'] = pdth_t_basex
             if t>len(self.df2)-1: # Out of sample   
                 # Death probability
-                pdth_base = pdth_t_base[-1] # Martingale death rate (could change)
+                if self.pdth_assump == 'martingale': # Martingale death rate 
+                    pdth_base = pdth_t_base[-1] 
+                elif self.pdth_assump == 'treatment': # Death prob slowly declines to assumed minimum and assumed halflife
+                    pdth_base = self.pdth_theta*pdth_t_base[-1] + (1-self.pdth_theta)*self.pdth_min
                 pdth_base = max(pdth_base, self.pdth_min) # To get around pdth=0 for countries with very few cases
                 pdth_t = (eta*factor + 1-eta)*pdth_base
                 pdth_targ = factor*pdth_base
@@ -918,6 +957,8 @@ def all_output(cset=['US','DE']):
     
     name = f'../output/{out_save_folder}/all_output.pkl'
     pickle.dump(df_out,open(name,'wb'))
+    with pd.ExcelWriter(f'../output/{out_save_folder}/output_condensed.xlsx') as writer:
+        df_out.to_excel(writer, sheet_name='output')    
     return df_out
 
 def update_table(cset=['US','DE']):

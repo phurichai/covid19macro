@@ -17,6 +17,7 @@ from pathlib import Path
 
 chosen_date = str(date.today()) 
 #chosen_date = '2021-03-11' # Choose a fixed date to simulate using already downloaded data (eg older cohorts)
+#chosen_date = '2021-04-07'
 vac_date = '9 Mar'
 
 df1 = pd.read_pickle(f'../data/data_daily_{chosen_date}.pkl')

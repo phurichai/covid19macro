@@ -3,6 +3,10 @@
 Created on Mon Oct  5 21:55:11 2020
 
 @author: Phurichai Rungcharoenkitkul
+
+Data sources: Our World in Data, Google 
+https://github.com/owid/covid-19-data/blob/master/public/data/owid-covid-codebook.csv
+
 """
 import pandas as pd
 import numpy as np
@@ -69,7 +73,7 @@ df1 = df.pivot_table(values=['total_cases','total_deaths',
                              'cardiovasc_death_rate','diabetes_prevalence',
                              'gdp_per_capita',
                              'reproduction_rate',
-                             'icu_patients',
+                             'icu_patients','hosp_patients',
                              'new_tests','tests_per_case',
                              'total_vaccinations_per_hundred',
                              'people_vaccinated_per_hundred',
