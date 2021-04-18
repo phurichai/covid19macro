@@ -25,7 +25,7 @@ c_all2b = country('all2','ISO3')
 # --------------------
 # Download data
 tic = time.perf_counter()
-urllib.request.urlretrieve("https://covid.ourworldindata.org/data/owid-covid-data.xlsx", "../data/ourworld.xlsx") 
+urllib.request.urlretrieve("https://github.com/owid/covid-19-data/raw/master/public/data/owid-covid-data.xlsx", "../data/ourworld.xlsx") 
 urllib.request.urlretrieve("https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv","../data/google.csv")
 df0 = pd.read_excel("../data/ourworld.xlsx",sheet_name="Sheet1",
                     engine='openpyxl',)
@@ -87,8 +87,9 @@ df_sm2 = pd.concat({'google_smooth': df_sm},axis=1)
 df2 = df1.merge(df_sm2, how='left', left_index=True, right_index=True)
 
 df2 = df2.rename(columns={'total_vaccinations_per_hundred': 'vac_total',
-                    'people_vaccinated_per_hundred': 'vac_partial',
+                    'people_vaccinated_per_hundred': 'vac_people',
                     'people_fully_vaccinated_per_hundred': 'vac_fully'})
+
 # ------------------
 # Save data into file
 name = "../data/data_daily_"+str(date.today()) +'.pkl'

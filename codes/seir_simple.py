@@ -56,9 +56,10 @@ class solveCovid:
         self.default_init_single = default_init_single
         self.default_bounds_single = default_bounds_single
         # Vaccine assumptions
-        self.vac_assump = 'vac_base' # ['vac_base','vac_worse','vac_better']
-        self.effi_one = 0.5 # efficacy after one dose
-        self.effi_two = 0.95 # efficacy after two doses
+        self.vac_assump = 'vac_base' # Vaccination scenarios: ['vac_base','vac_worse','vac_better']
+        self.vac_receiver = 'S+R' # Vaccines given to S or S+R? ['S only','S+R']
+        self.effi_one = 0.5 # Efficacy after one dose in %
+        self.effi_two = 0.95 # Efficacy after two doses in %
         self.target_weight = 0.8 # How targeted vaccine distribution is (1 = sequenced from eldest to youngest, 0 is random)
         self.vac_base_cover = 1 # Baseline: (already started): % of effective coverage by December 2021 (to be controlled by country-specific scaling factor below)
         self.vac_base_delayedstart = '2021-06-30' # Baseline: (hasn't started): first date of vaccination 
@@ -71,8 +72,10 @@ class solveCovid:
         self.vac_better_delayedcover = 1
         # Reinfection and loss of immunity
         self.reinfect = 'immune' # ['immune','reinfect']
-        self.r_re1 = np.log(2)/10000 # Baseline: lost immunity after 3 years
-        self.r_re2 = np.log(2)/60 # Lost immunity after 60 days, approx 1% of V+R lose immunity each day
+        self.r_re1_R = np.log(2)/10000 # Baseline: R loses immunity after 3 years
+        self.r_re1_V = np.log(2)/10000 # Baseline: V loses immunity after 3 years
+        self.r_re2_R = np.log(2)/60 # Downside risk: R loses immunity after 60 days, approx 1% of R lose immunity each day
+        self.r_re2_V = np.log(2)/60 # Downside risk: V loses immunity after 60 days, approx 1% of V lose immunity each day
         # Death probabilities
         self.pdth_assump = 'martingale' # ['martingale','treatment']
         self.pdth_min = 0.005 # Lowerbound on death probability - countries with very few cases still think there is death probability
@@ -86,16 +89,26 @@ class solveCovid:
                 'total_cases','total_deaths','new_cases','new_deaths',
                 'google_smooth','icu_patients','hosp_patients',
                 'new_tests','tests_per_case','aged_70_older',
-                'vac_total','vac_partial',
+                'vac_total','vac_people',
                 'vac_fully']][df1['total_cases'][iso2] > virus_thres] 
+        df2 = df2.droplevel('iso2',axis=1)
         df2['vac_total'] = df2['vac_total'].interpolate()
-        df2['vac_partial'] = df2['vac_partial'].interpolate()
+        df2['vac_people'] = df2['vac_people'].interpolate()
         df2['vac_fully'] = df2['vac_fully'].interpolate()
-        if np.isnan(df2['vac_partial'].iloc[-1].values[0]) and ~np.isnan(df2['vac_total'].iloc[-1].values[0]):
+        df2['vac_partial'] = df2['vac_people'] - df2['vac_fully']
+        # Check completeness of data
+        if iso2 == 'AU' or iso2 == 'SA':       
             df2['vac_partial'] = 0.8 * df2['vac_total'] # If no data on breakdowns exist, do manual approximation
             df2['vac_fully'] = 0.2 * df2['vac_total']
+        # z = df2['vac_total'] - df2['vac_fully'] - df2['vac_partial']
+        # if max(z) > 0.1:
+        #     print(f'{iso2} has incomplete vaccination breakdown. Approximate using total vaccination.')
+        #     df2['vac_partial'].loc[z>0.1] = 0.9 * df2['vac_total'].loc[z>0.1]
+        #     df2['vac_fully'].loc[z>0.1] = 0.1 * df2['vac_total'].loc[z>0.1]
+        # if np.isnan(df2['vac_partial'].iloc[-1].values[0]) and ~np.isnan(df2['vac_total'].iloc[-1].values[0]):    
+        #     df2['vac_partial'] = 0.8 * df2['vac_total'] # If no data on breakdowns exist, do manual approximation
+        #     df2['vac_fully'] = 0.2 * df2['vac_total']
         df2 = df2.fillna(0) # Replace NaN by 0 - deaths and vaccinations
-        df2 = df2.droplevel('iso2',axis=1)
         PopulationI = df2['total_cases'][0]
         PopulationD = df2['total_deaths'][0]
         if PopulationD==0:
@@ -175,17 +188,27 @@ class solveCovid:
         r_v = self.df_v['V_'].iloc[t+1] - self.df_v['V_'].iloc[t]
         # Reinfection parameters
         if self.reinfect == 'immune':
-            r_re = self.r_re1
+            r_re_R = self.r_re1_R
+            r_re_V = self.r_re1_V
         elif self.reinfect == 'reinfect':
             if t <= self.T:
-                r_re = self.r_re1
+                r_re_R = self.r_re1_R
+                r_re_V = self.r_re1_V
             else:
-                r_re = self.r_re2
+                r_re_R = self.r_re2_R
+                r_re_V = self.r_re2_V
+        # Vaccination recipients (S, or S+R)
+        if self.vac_receiver == 'S only':
+            zeta = 1
+        elif self.vac_receiver == 'S+R':
+            zeta = S/(S+R)
+        else:
+            print('Re-specify vaccine recipient choice')
         # Main equations
-        S1 = S - gamma_t * S * I / self.N + r_re*R +r_re*V - r_v
+        S1 = S - gamma_t * S * I / self.N + r_re_R*R +r_re_V*V - r_v * zeta
         if S1 < 0: # Vaccination reaches saturating point
             S1 = 0
-            r_v = S - gamma_t * S * I / self.N + r_re*R +r_re*V
+            r_v = (S - gamma_t * S * I / self.N + r_re_R*R +r_re_V*V) /zeta
         E1 = E + gamma_t * S * I / self.N - r_i * E
         I1 = I + r_i * E - r_d * I
         AR1 = AR + r_d * (1 - p_dth) * (1 - p_d) * I - r_ri * AR
@@ -194,7 +217,7 @@ class solveCovid:
         AD1 = AD + r_d * p_dth * (1 - p_d) * I - r_dth * AD
         DHD1 = DHD + r_d * p_dth * p_d * p_h * I - r_dth * DHD
         DQD1 = DQD + r_d * p_dth * p_d * (1 - p_h) * I - r_dth * DQD
-        R1 = R + r_ri * (AR + DQR) + r_rh * DHR - r_re*R
+        R1 = R + r_ri * (AR + DQR) + r_rh * DHR - r_re_R*R - r_v * (1-zeta)
         D1 = D + r_dth * (AD + DQD + DHD)
         # Helper states 
         TH1 = TH + r_d * p_d * p_h * I
@@ -202,7 +225,9 @@ class solveCovid:
         DVD1 = DVD + r_d * p_dth * p_d * p_h * p_v * I - r_dth * DVD
         DD1 = DD + r_dth * (DHD + DQD)
         DT1 = DT + r_d * p_d * I
-        V1 = V + r_v -r_re*V
+        
+        V1 = V + r_v -r_re_V*V
+        
         x1 = [S1, E1, I1, AR1, DHR1, DQR1, AD1, DHD1, DQD1,
               R1, D1, TH1, DVR1, DVD1, DD1, DT1, V1]
         return x1
