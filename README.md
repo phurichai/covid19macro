@@ -22,6 +22,37 @@ For more advanced usage, please consult the paper and note the following:
 
 ### Latest update 
 
+#### 18 Apr 2021
+
+#### Forecasts for selected advanced economies
+
+![Forecasts for selected advanced economies](pics/fig-update-ADV-2021-04-18.png)
+
+#### Forecasts for selected emerging market economies
+
+![Forecasts for selected advanced economies](pics/fig-update-EME-2021-04-18.png)
+
+#### Summary table for selected countries (baseline)
+
+|    |   Mobility 2021 |   Mobility, rest of 2021 |   Deaths/mn 2021 |   Deaths/mn, rest of 2021 |
+|:---|----------------:|-------------------------:|-----------------:|--------------------------:|
+| US |      -0.107438  |              -0.0400388  |         834.324  |                 184.884   |
+| DE |      -0.164417  |              -0.0677132  |         704.285  |                 156.48    |
+| GB |      -0.215804  |              -0.088062   |         827.411  |                  36.5846  |
+| FR |      -0.12216   |              -0.0318217  |         682.749  |                 156.424   |
+| ES |      -0.144278  |              -0.0697287  |         653.957  |                  95.6746  |
+| IT |      -0.151803  |              -0.0575194  |        1106.12   |                 404.815   |
+| CH |      -0.122354  |              -0.0349612  |         366.349  |                  33.0556  |
+| JP |      -0.106607  |              -0.0655814  |          98.6895 |                  49.6847  |
+| BR |      -0.0926249 |              -0.0363178  |        1599.41   |                 768.426   |
+| MX |      -0.133439  |              -0.0682171  |        1212.96   |                 542.799   |
+| IN |      -0.117276  |              -0.0972868  |         184.607  |                 163.392   |
+| KR |      -0.0346119 |              -0.00360465 |          23.9557 |                   6.94929 |
+| ZA |      -0.108853  |              -0.0442248  |         530.527  |                 109.139   |
+
+
+#### Previous update
+
 #### 11 Apr 2021
 
 #### Forecasts for selected advanced economies
@@ -50,7 +81,6 @@ For more advanced usage, please consult the paper and note the following:
 | KR |      -0.0356112 |              -0.00524528 |          24.5269 |                   8.05366 |
 | ZA |      -0.0994703 |              -0.0342642  |         474.878  |                  61.059   |
 
-### Previous updates
 
 #### 26 Mar 2021
 
