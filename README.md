@@ -22,6 +22,33 @@ For more advanced usage, please consult the paper and note the following:
 
 ### Latest update 
 
+#### 2 May 2021
+
+#### Forecasts for selected advanced economies
+
+![Forecasts for selected advanced economies](pics/fig-update-ADV-2021-05-03.png)
+
+#### Forecasts for selected emerging market economies
+
+![Forecasts for selected advanced economies](pics/fig-update-EME-2021-05-03.png)
+
+#### Summary table for selected countries (baseline)
+|    |   Mobility 2021 |   Mobility, rest of 2021 |   Deaths/mn 2021 |   Deaths/mn, rest of 2021 |
+|:---|----------------:|-------------------------:|-----------------:|--------------------------:|
+| US |           -10.8 |                     -4   |            754.6 |                     106.4 |
+| DE |           -16.7 |                     -7.1 |            666   |                     116.3 |
+| GB |           -21.4 |                     -8.4 |            809.3 |                      19.2 |
+| FR |           -12.5 |                     -3.4 |            677.7 |                     149.9 |
+| ES |           -14.9 |                     -7.6 |            653.4 |                      94.2 |
+| IT |           -15.4 |                     -5.9 |           1037.1 |                     332.8 |
+| CH |           -11.9 |                     -2.9 |            359.6 |                      24.8 |
+| JP |           -10.9 |                     -6.8 |             80.3 |                      31.7 |
+| BR |            -9.1 |                     -3.3 |           1345.7 |                     519.3 |
+| MX |           -12.2 |                     -5.1 |            925.1 |                     260.7 |
+| IN |           -12.3 |                    -10.5 |            209   |                     186.6 |
+| KR |            -3.4 |                     -0.2 |             23.9 |                       6.7 |
+| ZA |           -10.7 |                     -4.1 |            495.8 |                      74.8 |
+
 #### 25 Apr 2021
 
 With situation deteriorating markedly in India, below is an updated projection for the country. New cases could continue to go up from this point through out May, before stabilising in June (see the top left panel; green line shows the size of infectious population). And the situation could remain critical throughout the summer and even in the 3rd quarter, with cases and deaths still rising rapidly. Three reasons for this. One, a lot of population remain susceptible to the virus (top right panel), allowing fresh infections to occur relatively easily. Second, the extent of lockdown is assumed to be fairly limited (bottom middle panel). Third, limited vaccination so far and projected rollout provide little protection. One supportive factor is the young demographic which has been keeping fatality low (bottom right panel), but the strain on the healthcare system is clearly testing this (which is not incorporated into the analysis).
