@@ -1,7 +1,8 @@
 ### Logs of revisions to the model
 
 2 May 2021
-- Downward revisions to vaccination assumptions for several countries.
+- Downward revisions to vaccination assumptions for several countries, to make them more realistic given actual rollout.
+- Added a file 'main_gitupdate', a calling file that produces weekly update graphs and table.
 
 18 April 2021
 - Vaccination path assumptions simplified. Contracted dosages are no longer used as inputs. Countries are instead divided into different groups, with different vaccination paces and expected date of completion. These groupings may be adjusted according to actual progress made.
