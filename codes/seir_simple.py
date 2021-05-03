@@ -60,7 +60,7 @@ class solveCovid:
         self.vac_receiver = 'S+R' # Vaccines given to S or S+R? ['S only','S+R']
         self.effi_one = 0.5 # Efficacy after one dose in %
         self.effi_two = 0.95 # Efficacy after two doses in %
-        self.target_weight = 0.8 # How targeted vaccine distribution is (1 = sequenced from eldest to youngest, 0 is random)
+        self.target_weight = 0.7 # How targeted vaccine distribution is (1 = sequenced from eldest to youngest, 0 is random)
         self.vac_base_cover = 1 # Baseline: (already started): % of effective coverage by December 2021 (to be controlled by country-specific scaling factor below)
         self.vac_base_delayedstart = '2021-06-30' # Baseline: (hasn't started): first date of vaccination 
         self.vac_base_delayedcover = 0.75 # Baseline: (hasn't started): % of contracted dosages deployed by December 2021
@@ -94,20 +94,14 @@ class solveCovid:
         df2 = df2.droplevel('iso2',axis=1)
         df2['vac_total'] = df2['vac_total'].interpolate()
         df2['vac_people'] = df2['vac_people'].interpolate()
-        df2['vac_fully'] = df2['vac_fully'].interpolate()
-        df2['vac_partial'] = df2['vac_people'] - df2['vac_fully']
-        # Check completeness of data
-        if iso2 == 'AU' or iso2 == 'SA':       
-            df2['vac_partial'] = 0.8 * df2['vac_total'] # If no data on breakdowns exist, do manual approximation
+        if iso2 == 'AU' or iso2 == 'SA': # Countries with no breakdowns; do manual approximation      
+            df2['vac_partial'] = 0.8 * df2['vac_total'] 
             df2['vac_fully'] = 0.2 * df2['vac_total']
-        # z = df2['vac_total'] - df2['vac_fully'] - df2['vac_partial']
-        # if max(z) > 0.1:
-        #     print(f'{iso2} has incomplete vaccination breakdown. Approximate using total vaccination.')
-        #     df2['vac_partial'].loc[z>0.1] = 0.9 * df2['vac_total'].loc[z>0.1]
-        #     df2['vac_fully'].loc[z>0.1] = 0.1 * df2['vac_total'].loc[z>0.1]
-        # if np.isnan(df2['vac_partial'].iloc[-1].values[0]) and ~np.isnan(df2['vac_total'].iloc[-1].values[0]):    
-        #     df2['vac_partial'] = 0.8 * df2['vac_total'] # If no data on breakdowns exist, do manual approximation
-        #     df2['vac_fully'] = 0.2 * df2['vac_total']
+        else : # For most countries, 
+            date1 = df2['vac_fully'].first_valid_index() # Next 2 lines fill NA in 'vac_fully', so vac_partial is defined
+            df2['vac_fully'].iloc[:df2.index.get_loc(date1)-1] = 0
+            df2['vac_fully'] = df2['vac_fully'].interpolate()
+            df2['vac_partial'] = df2['vac_people'] - df2['vac_fully']            
         df2 = df2.fillna(0) # Replace NaN by 0 - deaths and vaccinations
         PopulationI = df2['total_cases'][0]
         PopulationD = df2['total_deaths'][0]
@@ -142,12 +136,14 @@ class solveCovid:
         # Vaccination assumptions
         if self.iso2 in ['GB','US']:
             vac_scale = 1
-        elif self.iso2 in ['BE','FR','DE','IT','NL','PL','SG','ES','SE','CH','RO']:
+        elif self.iso2 in ['BE','FR','DE','IT','NL','SG','ES','CH','RO','CL','CA']:
             vac_scale = 0.8
-        elif self.iso2 in ['AR','AU','CA','JP','KR','MX','RU','SA','ZA','TR']:
+        elif self.iso2 in ['AU','PL','SA','SE','TR']:
             vac_scale = 0.65
-        elif self.iso2 in ['BR','TH','ID','IN','MY']:
+        elif self.iso2 in ['AR','BR','IN','MX','RU']:
             vac_scale = 0.50
+        elif self.iso2 in ['ID','JP','KR','MY','TH','ZA']:
+            vac_scale = 0.25
         else:
             vac_scale = 0.50
             print('Missing vaccine assumption for selected country')
@@ -1004,11 +1000,11 @@ def update_table(cset=['US','DE']):
         dD_mn_2021 = 1000000*dD_2021/tmp.N
         dD_mn_fc = 1000000*dD_fc/tmp.N
         
-        data[c] = [mob_2021,mob_fc,
+        data[c] = [100*mob_2021,100*mob_fc,
                    dD_mn_2021,dD_mn_fc,
                    ]
     df_out =  pd.DataFrame.from_dict(data, orient='index', columns=data_col) 
-
+    df_out = df_out.round(decimals=1)
     return df_out
 
 # Compare 2 scenarios, showing 4 key charts
