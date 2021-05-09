@@ -22,6 +22,35 @@ For more advanced usage, please consult the paper and note the following:
 
 ### Latest update 
 
+#### 9 May 2021
+
+#### Forecasts for selected advanced economies
+
+![Forecasts for selected advanced economies](pics/fig-update-ADV-2021-05-09.png)
+
+#### Forecasts for selected emerging market economies
+
+![Forecasts for selected advanced economies](pics/fig-update-EME-2021-05-09.png)
+#### Summary table for selected countries (baseline)
+
+|    |   Mobility 2021 |   Mobility, rest of 2021 |   Deaths/mn 2021 |   Deaths/mn, rest of 2021 |
+|:---|----------------:|-------------------------:|-----------------:|--------------------------:|
+| US |           -11.2 |                     -3.4 |            819.9 |                     126.9 |
+| DE |           -16.8 |                     -5.2 |            730.2 |                     123.4 |
+| GB |           -21.5 |                     -6.6 |            806.3 |                      10.7 |
+| FR |           -14.3 |                     -3.4 |            721   |                     108.7 |
+| ES |           -12.8 |                     -3.1 |            648.7 |                      51.3 |
+| IT |           -15.3 |                     -3.9 |           1042.1 |                     237.9 |
+| CH |           -11.7 |                     -1.1 |            373.6 |                      17.3 |
+| JP |           -17.3 |                    -15.7 |            193.1 |                     134.6 |
+| BR |            -9.5 |                     -2.6 |           1689.2 |                     623.9 |
+| MX |           -13.4 |                     -6   |           1006.9 |                     284.4 |
+| IN |           -15.6 |                    -12.8 |            372.3 |                     304.2 |
+| KR |            -3.9 |                     -1   |             46.1 |                      27.4 |
+| ZA |            -9.5 |                     -1.5 |            458.1 |                      21.4 |
+
+
+
 #### 2 May 2021
 
 #### Forecasts for selected advanced economies
