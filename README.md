@@ -16,11 +16,37 @@ Please consult the manuscript in the root folder for details.
 ### How to run the code:
 All the codes are in the folder "codes". To run everything from scratch, run the calling file `main_paper.py`. This will download all data, implement all the empirical procedure and return all figures used in the paper. These pictures are saved in the folder 'pics', and estimated parameters in folder 'params'.
 
-For more advanced usage, please consult the paper and note the following:
-1. Projections require assumptions about future vaccination pace. Current formulation uses total contracted dosages as an input, which are manually taken from Bloomberg (file 'vaccine_contracts.xlsx') and loaded into the model via file `data_vaccines`. 
-2. The key model file `seir_simple` contains the solveCovid class that implements all the steps for a given country. The \__init\__ function specifies all common assumptions, includling policy function (fit to data or exogenous), infection shock process, vaccination assumptions and all other scenario assumptions.  
+For more advanced usage, please consult the paper. The key model file `seir_simple` contains the solveCovid class that implements all the steps for a given country. The \__init\__ function specifies all common assumptions, includling policy function (fit to data or exogenous), infection shock process, vaccination assumptions and all other scenario assumptions.  
 
 ### Latest update 
+
+#### 16 May 2021
+
+#### Forecasts for selected advanced economies
+
+![Forecasts for selected advanced economies](pics/fig-update-ADV-2021-05-16.png)
+
+#### Forecasts for selected emerging market economies
+
+![Forecasts for selected advanced economies](pics/fig-update-EME-2021-05-16.png)
+#### Summary table for selected countries (baseline)
+
+|    |   Mobility 2021 |   Mobility, now to mid 2022 |   Deaths/mn 2021 |   Deaths/mn, now to mid 2022 |
+|:---|----------------:|----------------------------:|-----------------:|-----------------------------:|
+| US |            -9.5 |                        -1.8 |            524   |                        103.6 |
+| DE |           -13.9 |                        -2.6 |            434.3 |                         87.7 |
+| GB |           -18.9 |                        -3.8 |            352.9 |                         11.6 |
+| FR |           -12.7 |                        -1.8 |            547.4 |                         79.7 |
+| ES |           -10.2 |                        -1.2 |            489.4 |                         47.9 |
+| IT |           -12.4 |                        -1.6 |            740.2 |                        147.3 |
+| CH |            -9.2 |                        -0.3 |            166.1 |                          7   |
+| JP |           -16.6 |                       -11.6 |            182   |                        207.6 |
+| BR |            -8.1 |                        -1   |           1536.1 |                        541.2 |
+| MX |           -11.5 |                        -3.2 |            733.8 |                        247.1 |
+| IN |           -16.5 |                        -7.4 |            360.2 |                        277.9 |
+| KR |            -3   |                        -1.1 |             27.9 |                         27.6 |
+| ZA |           -13.6 |                        -6.1 |            469.7 |                        309.2 |
+
 
 #### 9 May 2021
 
