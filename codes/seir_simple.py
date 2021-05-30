@@ -52,7 +52,6 @@ class solveCovid:
         self.gamma_tilde_model = 'AR1' # ['AR1','AR2','shock']
         self.gamma_shock_length = 10 # Shock gamma_tilde for x days  
         self.gamma_shock_depth = 0.5 # Daily increment of gamma
-        self.T1_date = T1_date
         self.default_init_single = default_init_single
         self.default_bounds_single = default_bounds_single
         # Vaccine assumptions
@@ -87,7 +86,7 @@ class solveCovid:
         self.N = df1.fillna(method='ffill')['population'][iso2].iloc[-1]
         df2 = df1.iloc[:,df1.columns.get_level_values(1)==iso2][[
                 'total_cases','total_deaths','new_cases','new_deaths',
-                'google_smooth','icu_patients','hosp_patients',
+                'google_smooth','icu_patients','hosp_patients','reproduction_rate',
                 'new_tests','tests_per_case','aged_70_older',
                 'vac_total','vac_people',
                 'vac_fully']][df1['total_cases'][iso2] > virus_thres] 
@@ -118,7 +117,6 @@ class solveCovid:
         self.balance = self.cases_data_fit[-1] / max(self.deaths_data_fit[-1], 10) / 3
         date_day_since100 = pd.to_datetime(df2.index[0])
         self.maxT = (default_maxT - date_day_since100).days + 1
-        self.T1 = (self.T1_date - date_day_since100).days + 1
         self.mobility_vec = df2['google_smooth'].values
         self.T = len(df2)
         self.t_cases = np.arange(0,self.T)
@@ -136,14 +134,16 @@ class solveCovid:
         # Vaccination assumptions
         if self.iso2 in ['GB','US']:
             vac_scale = 1
-        elif self.iso2 in ['BE','FR','DE','IT','NL','SG','ES','CH','RO','CL','CA']:
+        elif self.iso2 in ['BE','FR','DE','IT','NL','PL','SG','ES','CH','RO','CL','CA']:
             vac_scale = 0.8
-        elif self.iso2 in ['AU','PL','SA','SE','TR']:
+        elif self.iso2 in ['AU','SA','SE','TR']:
             vac_scale = 0.65
-        elif self.iso2 in ['AR','BR','IN','MX','RU']:
+        elif self.iso2 in ['AR','BR','MX','RU']:
             vac_scale = 0.50
-        elif self.iso2 in ['ID','JP','KR','MY','TH','ZA']:
+        elif self.iso2 in ['ID','IN','JP','KR','MY','TH']:
             vac_scale = 0.25
+        elif self.iso2 in ['ZA']:
+            vac_scale = 0.10
         else:
             vac_scale = 0.50
             print('Missing vaccine assumption for selected country')
@@ -983,19 +983,20 @@ def all_output(cset=['US','DE']):
     return df_out
 
 def update_table(cset=['US','DE']):
-    data_col = ['Mobility 2021','Mobility, rest of 2021',
-                        'Deaths/mn 2021','Deaths/mn, rest of 2021',
+    data_col = ['Mobility 2021','Mobility, now to mid 2022',
+                        'Deaths/mn 2021','Deaths/mn, now to mid 2022',
                         ]
     data = {}
     for c in cset:
         tmp = pickle.load(open(f'../output/{out_load_folder}/{c}_baseline.pkl','rb'))
-        cnum = tmp.df3.index.get_loc('2020-12-31')+1
+        cnum = tmp.df3.index.get_loc('2021-01-31')
+        cnum2 = tmp.df3.index.get_loc('2021-12-31')
         d = tmp.df3['total_cases'].last_valid_index()
         dnum = tmp.df3.index.get_loc(d)+1
         
-        mob_2021 = tmp.df3['mob_fc'].iloc[cnum:].mean() # Average mobility for 2021
+        mob_2021 = tmp.df3['mob_fc'].iloc[cnum:cnum2].mean() # Average mobility for 2021
         mob_fc = tmp.df3['mob_fc'].iloc[dnum:].mean() # Average mobility from current date till year end
-        dD_2021 = tmp.df3['DD'][-1] - tmp.df3['DD'][cnum]    
+        dD_2021 = tmp.df3['DD'][cnum2] - tmp.df3['DD'][cnum]    
         dD_fc = tmp.df3['DD'][-1] - tmp.df3['DD'][dnum]
         dD_mn_2021 = 1000000*dD_2021/tmp.N
         dD_mn_fc = 1000000*dD_fc/tmp.N
