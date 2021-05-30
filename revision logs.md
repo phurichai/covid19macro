@@ -1,5 +1,8 @@
 ### Logs of revisions to the model
 
+30 May 2021
+- Adjust vaccination assumptions for a few countries to reflect actual rollout.
+
 2 May 2021
 - Downward revisions to vaccination assumptions for several countries, to make them more realistic given actual rollout.
 - Added a file 'main_gitupdate', a calling file that produces weekly update graphs and table.
