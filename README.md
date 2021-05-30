@@ -20,6 +20,33 @@ For more advanced usage, please consult the paper. The key model file `seir_simp
 
 ### Latest update 
 
+#### 30 May 2021
+
+#### Forecasts for selected advanced economies
+
+![Forecasts for selected advanced economies](pics/fig-update-ADV-2021-05-30.png)
+
+#### Forecasts for selected emerging market economies
+
+![Forecasts for selected advanced economies](pics/fig-update-EME-2021-05-30.png)
+#### Summary table for selected countries (baseline)
+
+|    |   Mobility 2021 |   Mobility, now to mid 2022 |   Deaths/mn 2021 |   Deaths/mn, now to mid 2022 |
+|:---|----------------:|----------------------------:|-----------------:|-----------------------------:|
+| US |            -9.8 |                        -1.5 |            519.8 |                         74.9 |
+| DE |           -14.6 |                        -2.2 |            435.6 |                         60.7 |
+| GB |           -19   |                        -3   |            357.6 |                         14.6 |
+| FR |           -11.9 |                        -0.3 |            508.8 |                         13.6 |
+| ES |           -10.5 |                        -0.9 |            472.2 |                         16.5 |
+| IT |           -12.3 |                        -1.1 |            708.2 |                         82.5 |
+| CH |           -10.5 |                        -0.6 |            178.1 |                          9.6 |
+| JP |           -15.2 |                       -11.1 |            171.1 |                        195.8 |
+| BR |            -8.6 |                        -1   |           1669.5 |                        550.7 |
+| MX |           -11.4 |                        -2.8 |            856.4 |                        346.3 |
+| IN |           -23.9 |                       -14   |            415   |                        402.7 |
+| KR |            -2.1 |                        -0.2 |             22.8 |                         18   |
+| ZA |           -16.5 |                        -9.5 |            604.8 |                        527.7 |
+
 #### 23 May 2021
 
 #### Forecasts for selected advanced economies
